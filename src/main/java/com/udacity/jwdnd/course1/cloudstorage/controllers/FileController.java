@@ -33,7 +33,7 @@ public class FileController {
     public RedirectView upload(@RequestParam("fileUpload") MultipartFile fileUpload, Principal principal, RedirectAttributes redirectAttributes){
         if(fileUpload == null || fileUpload.isEmpty()){
             redirectAttributes.addFlashAttribute("error", "Upload a file.");
-            return new RedirectView("/home/files");
+            return new RedirectView("/home");
         }
         User user = userService.getUserByUserName(principal.getName());
 
@@ -41,7 +41,7 @@ public class FileController {
 
         if(fileService.alreadyUploadedOrNone(fileUpload.getOriginalFilename(), user.getUserId())){
             redirectAttributes.addFlashAttribute("error", "Filename already taken or empty.");
-            return new RedirectView("/home/files");
+            return new RedirectView("/home");
         }
         else{
             try{
@@ -52,23 +52,23 @@ public class FileController {
             }
             catch(IOException e){
                 redirectAttributes.addFlashAttribute("error", "Problem with uploading the file.");
-                return new RedirectView("/home/files");
+                return new RedirectView("/home");
             }
             catch(MaxUploadSizeExceededException e){
                 redirectAttributes.addFlashAttribute("error", "The file exceeds the max limit.");
-                return new RedirectView("/home/files");
+                return new RedirectView("/home");
             }
         }
 
         if(row < 0){
             redirectAttributes.addFlashAttribute("error", "There was a problem with uploading the file.");
-            return new RedirectView("/home/files");
+            return new RedirectView("/home");
         }
 
         redirectAttributes.addFlashAttribute("success", "Upload a file.");
 
 
-        return new RedirectView("/home/files");
+        return new RedirectView("/home");
     }
 
     @GetMapping("/view/{fileId}")
@@ -91,7 +91,7 @@ public class FileController {
     public RedirectView delete(@PathVariable int fileId, RedirectAttributes redirectAttributes){
         fileService.deleteFile(fileId);
         redirectAttributes.addFlashAttribute("success", "File successfully deleted.");
-        return new RedirectView("/home/files");
+        return new RedirectView("/home");
     }
 
 }
